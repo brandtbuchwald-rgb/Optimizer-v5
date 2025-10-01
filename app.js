@@ -135,3 +135,27 @@ async function boot(){
 }
 
 document.addEventListener("DOMContentLoaded",boot);
+function computeTotals(){
+  const totals = {AS:0,CR:0,EV:0,DR:0};
+  for(const slot in state.slots){
+    const s = state.slots[slot];
+    for(let i=1;i<=4;i++){
+      const stat = s[`line${i}:stat`];
+      const val  = +s[`line${i}:value`]||0;
+      if(stat==="Crit Chance") totals.CR+=val;
+      if(stat==="Evasion") totals.EV+=val;
+      if(stat==="DR%") totals.DR+=val;
+      if(stat==="ATK SPD") totals.AS+=val;
+    }
+    // Rune adds too
+    if(s.rune==="Crit Chance") totals.CR+=12;
+    if(s.rune==="Evasion") totals.EV+=12;
+    if(s.rune==="DR") totals.DR+=12;
+    if(s.rune==="ATK SPD") totals.AS+=6;
+  }
+  // enforce caps
+  totals.CR = Math.min(totals.CR, state.rules.caps.critFromGearRune);
+  totals.EV = Math.min(totals.EV, state.rules.caps.evaFromGearRune);
+  totals.DR = Math.min(totals.DR, state.rules.caps.tankDRTarget);
+  return totals;
+}
