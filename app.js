@@ -16,56 +16,53 @@ function slotTemplate(slot){
   const card = el("div","card");
   card.appendChild(el("h3",null,slot));
 
-  // Tier select
+  // Tier
   const tierRow = el("div","row");
   tierRow.innerHTML = `<label>Tier</label>`;
-  const sel = el("select");
-  state.rules.tiers.forEach(t => sel.appendChild(new Option(t,t)));
-  sel.name = `${slot}:tier`;
-  sel.addEventListener("input", onSlotChange);
-  tierRow.appendChild(sel);
+  const tierSel = el("select");
+  state.rules.tiers.forEach(t => tierSel.appendChild(new Option(t,t)));
+  tierSel.name = `${slot}:tier`;
+  tierSel.addEventListener("input", onSlotChange);
+  tierRow.appendChild(tierSel);
   card.appendChild(tierRow);
 
-  // Stat inputs
-  const stats = ["ATK%","Crit DMG%","Crit Chance","Evasion","HP%","DEF%","DR%","Lifesteal%"];
-  stats.forEach(stat => {
+  // Rune
+  const runeRow = el("div","row");
+  runeRow.innerHTML = `<label>Rune</label>`;
+  const runeSel = el("select");
+  ["","ATK SPD","Crit Chance","Evasion","DR"].forEach(r=>runeSel.appendChild(new Option(r,r)));
+  runeSel.name = `${slot}:rune`;
+  runeSel.addEventListener("input", onSlotChange);
+  runeRow.appendChild(runeSel);
+  card.appendChild(runeRow);
+
+  // Special line (Chaos/Abyss only)
+  const specialRow = el("div","row");
+  specialRow.innerHTML = `<label>Special Line</label>`;
+  const spSel = el("select");
+  ["","Crit DMG +80%","HP% +52%","Boss DMG","Racial DMG"].forEach(opt=>spSel.appendChild(new Option(opt,opt)));
+  spSel.name = `${slot}:special`;
+  spSel.addEventListener("input", onSlotChange);
+  specialRow.appendChild(spSel);
+  card.appendChild(specialRow);
+
+  // Lines (3–4 normal lines)
+  const lineStats = ["","ATK SPD","Crit Chance","Evasion","ATK%","Crit DMG%","HP%","DEF%","DR%"];
+  const maxLines = (slot==="Weapon" ? 3 : 4);
+  for(let i=1;i<=maxLines;i++){
     const row = el("div","row");
-    row.innerHTML = `<label>${stat}</label>`;
-    const inp = el("input");
-    inp.type = "number";
-    inp.step = "1";
-    inp.min = "0";
-    inp.name = `${slot}:${stat}`;
-    inp.addEventListener("input", onSlotChange);
-    row.appendChild(inp);
+    const sel = el("select");
+    lineStats.forEach(opt=>sel.appendChild(new Option(opt,opt)));
+    sel.name = `${slot}:line${i}:stat`;
+    sel.addEventListener("input", onSlotChange);
+
+    const val = el("input");
+    val.type = "number"; val.step="1"; val.min="0";
+    val.name = `${slot}:line${i}:value`;
+    val.addEventListener("input", onSlotChange);
+
+    row.appendChild(sel); row.appendChild(val);
     card.appendChild(row);
-  });
-
-  // Image URL
-  const imgRow = el("div","row");
-  imgRow.innerHTML = `<label>Image URL</label>`;
-  const url = el("input");
-  url.type = "url";
-  url.placeholder = "https://...";
-  url.name = `${slot}:image`;
-  url.addEventListener("input", onSlotChange);
-  imgRow.appendChild(url);
-  card.appendChild(imgRow);
-
-  // Purple 5th / notes from rules.json
-  const rules = state.rules.slotRules[slot];
-  if(rules){
-    const tags = el("div","stat-lines");
-    if(rules.fifthStat){
-      tags.appendChild(el("span","tag purple",`5th: ${rules.fifthStat.name} ${rules.fifthStat.value||""}`));
-    }
-    if(rules.inlineChoices){
-      rules.inlineChoices.forEach(x => tags.appendChild(el("span","tag",`Inline: ${x}`)));
-    }
-    if(rules.notes){
-      rules.notes.forEach(x => tags.appendChild(el("span","tag",x)));
-    }
-    card.appendChild(tags);
   }
 
   return card;
