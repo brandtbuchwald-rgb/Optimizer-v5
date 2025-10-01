@@ -12,7 +12,17 @@
   --focus:#9bd6ff;
   --shadow:rgba(0,0,0,.35);
 }
-
+.grid {
+  display: grid;
+  grid-template-columns: 1fr; /* phone = single column */
+  gap: .9rem;
+}
+@media (min-width:600px){
+  .grid{ grid-template-columns: repeat(2,1fr); }
+}
+@media (min-width:1000px){
+  .grid{ grid-template-columns: repeat(3,1fr); }
+}
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
 button,input,select{font:inherit;color:inherit}
