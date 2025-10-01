@@ -85,21 +85,23 @@ function renderSlots(){
 }
 
 function renderPreview(){
+  const totals = computeTotals();
+  document.getElementById("scAS").textContent = totals.AS.toFixed(1)+"%";
+  document.getElementById("scCR").textContent = totals.CR+"%";
+  document.getElementById("scEV").textContent = totals.EV+"%";
+  document.getElementById("scDR").textContent = totals.DR+"%";
+
   const wrap=document.getElementById("scSlots");
   wrap.innerHTML="";
   state.rules.slots.forEach(slot=>{
     const s=state.slots[slot]||{};
     const box=el("div","sc-slot");
-    const img=el("img"); img.src=s.image||""; img.alt=slot;
-    box.appendChild(img);
-    const meta=el("div","sl-meta");
-    meta.innerHTML=`<div><strong>${slot}</strong> ${s.tier||""}</div>
-    <div>${s.lines||""}</div>`;
-    box.appendChild(meta);
+    box.innerHTML = `<strong>${slot}</strong><br>
+      ${s.tier||""}<br>
+      ${s.special||""}`;
     wrap.appendChild(box);
   });
 }
-
 function saveAuto(){
   localStorage.setItem("redi-gearbuild",JSON.stringify(state.slots));
 }
