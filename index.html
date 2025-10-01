@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Rediscover Gear Builder v2</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">Rediscover • Gear Builder</div>
+    <div class="mode-wrap">
+      <label><input type="radio" name="focus" value="DPS" checked>DPS</label>
+      <label><input type="radio" name="focus" value="Tank">Tank</label>
+    </div>
+    <button id="btnExport">Export PNG</button>
+  </header>
+
+  <main>
+    <section class="grid" id="slotsGrid"></section>
+
+    <section class="preview-wrap">
+      <div id="shareCard" class="share-card">
+        <div class="sc-header">
+          <div class="sc-title">Rediscover Build</div>
+          <div class="sc-badges">
+            <span id="badgeFocus">DPS</span> <span id="badgeStamp">v2</span>
+          </div>
+        </div>
+        <div class="sc-stats">
+          <div><strong>AS</strong> <span id="scAS">0%</span></div>
+          <div><strong>CR</strong> <span id="scCR">0%</span></div>
+          <div><strong>EVA</strong> <span id="scEV">0%</span></div>
+          <div><strong>DR</strong> <span id="scDR">0%</span></div>
+        </div>
+        <div id="scSlots" class="sc-slots"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

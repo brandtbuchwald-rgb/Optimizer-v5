@@ -1,0 +1,6 @@
+{
+  "version":"2.0",
+  "slots":["Weapon","Helm","Armor","Gloves","Boots","Belt","Necklace","Ring","Pet Gear"],
+  "tiers":["Primal","Original","Chaos","Abyss"],
+  "caps":{"critFromGearRune":50,"evaFromGearRune":40,"tankDRTarget":100}
+}
