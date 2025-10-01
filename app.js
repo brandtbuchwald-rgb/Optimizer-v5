@@ -13,43 +13,61 @@ function el(tag, cls, html){
 }
 
 function slotTemplate(slot){
-  const card=el("div","card");
-  card.dataset.slot=slot;
+  const card = el("div","card");
   card.appendChild(el("h3",null,slot));
 
   // Tier select
-  const tierRow=el("div","row");
-  tierRow.appendChild(el("label",null,"Tier"));
-  const sel=el("select");
-  state.rules.tiers.forEach(t=>{
-    const o=el("option",null,t); sel.appendChild(o);
-  });
-  sel.name=`${slot}:tier`;
-  sel.addEventListener("input",onSlotChange);
+  const tierRow = el("div","row");
+  tierRow.innerHTML = `<label>Tier</label>`;
+  const sel = el("select");
+  state.rules.tiers.forEach(t => sel.appendChild(new Option(t,t)));
+  sel.name = `${slot}:tier`;
+  sel.addEventListener("input", onSlotChange);
   tierRow.appendChild(sel);
   card.appendChild(tierRow);
 
-  // Lines
-  const lineRow=el("div","row");
-  lineRow.appendChild(el("label",null,"Lines"));
-  const inp=el("input"); inp.type="text"; inp.name=`${slot}:lines`; inp.placeholder="e.g. Crit, Eva, HP%";
-  inp.addEventListener("input",onSlotChange);
-  lineRow.appendChild(inp);
-  card.appendChild(lineRow);
+  // Stat inputs
+  const stats = ["ATK%","Crit DMG%","Crit Chance","Evasion","HP%","DEF%","DR%","Lifesteal%"];
+  stats.forEach(stat => {
+    const row = el("div","row");
+    row.innerHTML = `<label>${stat}</label>`;
+    const inp = el("input");
+    inp.type = "number";
+    inp.step = "1";
+    inp.min = "0";
+    inp.name = `${slot}:${stat}`;
+    inp.addEventListener("input", onSlotChange);
+    row.appendChild(inp);
+    card.appendChild(row);
+  });
 
-  // Image
-  const imgRow=el("div","row");
-  imgRow.appendChild(el("label",null,"Image URL"));
-  const url=el("input"); url.type="url"; url.name=`${slot}:image`; url.placeholder="https://...";
-  url.addEventListener("input",onSlotChange);
+  // Image URL
+  const imgRow = el("div","row");
+  imgRow.innerHTML = `<label>Image URL</label>`;
+  const url = el("input");
+  url.type = "url";
+  url.placeholder = "https://...";
+  url.name = `${slot}:image`;
+  url.addEventListener("input", onSlotChange);
   imgRow.appendChild(url);
   card.appendChild(imgRow);
 
-  // Show default 5th stat if any
-  const rules=state.rules.slotRules[slot];
-  if(rules && rules.fifthStat){
-    card.appendChild(el("div","tag purple",`5th: ${rules.fifthStat.name} ${rules.fifthStat.value||""}`));
+  // Purple 5th / notes from rules.json
+  const rules = state.rules.slotRules[slot];
+  if(rules){
+    const tags = el("div","stat-lines");
+    if(rules.fifthStat){
+      tags.appendChild(el("span","tag purple",`5th: ${rules.fifthStat.name} ${rules.fifthStat.value||""}`));
+    }
+    if(rules.inlineChoices){
+      rules.inlineChoices.forEach(x => tags.appendChild(el("span","tag",`Inline: ${x}`)));
+    }
+    if(rules.notes){
+      rules.notes.forEach(x => tags.appendChild(el("span","tag",x)));
+    }
+    card.appendChild(tags);
   }
+
   return card;
 }
 
